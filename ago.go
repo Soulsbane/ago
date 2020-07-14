@@ -44,6 +44,14 @@ func getFileSize(info os.FileInfo, colorize bool) string {
 	return humanize.Bytes(uint64(info.Size()))
 }
 
+func getFileName(info os.FileInfo, colorize bool) string {
+	if colorize == true {
+		return color.YellowString(info.Name())
+	}
+
+	return info.Name()
+}
+
 func listFiles() {
 	files, err := ioutil.ReadDir(".")
 	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
@@ -54,7 +62,7 @@ func listFiles() {
 
 	for _, f := range files {
 		if !f.IsDir() {
-			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", f.Name(), getFileSize(f, true), getModifedTime(f, true))
+			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
 		}
 	}
 
