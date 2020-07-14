@@ -6,26 +6,11 @@ import (
 	"log"
 	"os"
 	"text/tabwriter"
-	"time"
 
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 )
-
-func getDifference() int64 {
-	info, err := os.Stat("ago")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	modifiedTime := info.ModTime()
-	now := time.Now()
-	difference := now.Unix() - modifiedTime.Unix()
-
-	return difference
-}
 
 func getModifedTime(info os.FileInfo, colorize bool) string {
 	modifiedTime := info.ModTime()
