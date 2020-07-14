@@ -53,7 +53,7 @@ func getFileName(info os.FileInfo, colorize bool) string {
 	return info.Name()
 }
 
-func listFiles(colorize bool) {
+func listFiles(ugly bool, showHidden bool) {
 	files, err := ioutil.ReadDir(".")
 	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 
@@ -63,10 +63,10 @@ func listFiles(colorize bool) {
 
 	for _, f := range files {
 		if !f.IsDir() {
-			if colorize {
-				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
-			} else {
+			if ugly {
 				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+			} else {
+				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
 			}
 		}
 	}
@@ -76,15 +76,10 @@ func listFiles(colorize bool) {
 
 func main() {
 	var args struct {
-		Ugly bool `arg:"-u" help:"Remove colorized output. Yes it's ugly."`
+		Ugly   bool `arg:"-u" default:"false" help:"Remove colorized output. Yes it's ugly."`
+		Hidden bool `arg:"-i" default:"false" help:"Show hidden files."`
 	}
 
 	arg.MustParse(&args)
-
-	if args.Ugly {
-		listFiles(false)
-	} else {
-		listFiles(true)
-	}
-
+	listFiles(args.Ugly, args.Hidden)
 }
