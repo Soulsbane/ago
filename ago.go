@@ -8,6 +8,7 @@ import (
 	"text/tabwriter"
 	"time"
 
+	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 )
@@ -52,7 +53,7 @@ func getFileName(info os.FileInfo, colorize bool) string {
 	return info.Name()
 }
 
-func listFiles() {
+func listFiles(colorize bool) {
 	files, err := ioutil.ReadDir(".")
 	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 
@@ -62,7 +63,11 @@ func listFiles() {
 
 	for _, f := range files {
 		if !f.IsDir() {
-			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+			if colorize {
+				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+			} else {
+				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+			}
 		}
 	}
 
@@ -70,5 +75,16 @@ func listFiles() {
 }
 
 func main() {
-	listFiles()
+	var args struct {
+		Ugly bool `arg:"-u" help:"Remove colorized output. Yes it's ugly."`
+	}
+
+	arg.MustParse(&args)
+
+	if args.Ugly {
+		listFiles(false)
+	} else {
+		listFiles(true)
+	}
+
 }
