@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"text/tabwriter"
 
 	"github.com/alexflint/go-arg"
@@ -43,8 +44,32 @@ func getFileName(info os.FileInfo, colorize bool) string {
 	return info.Name()
 }
 
-func isFileHidden() bool {
-	return true
+func isFileHidden(info os.FileInfo) bool {
+	if runtime.GOOS != "windows" {
+		if info.Name()[0:1] == "." {
+			return true
+		}
+
+		return false
+	}
+	// FIXME: Can't seem to find documentation for properly handling this on windows.
+	/*else {
+		//if runtime.GOOS == "windows" {
+		pointer, err := syscall.UTF16PtrFromString(info.Name())
+
+		if err != nil {
+			return false
+		}
+
+		attributes, err := syscall.GetFileAttributes(pointer)
+
+		if err != nil {
+			return false
+		}
+
+		return attributes&syscall.FILE_ATTRIBUTE_HIDDEN != 0
+	}*/
+	return false
 }
 
 func getLinkPath(info os.FileInfo) string {
@@ -80,10 +105,20 @@ func listFiles(ugly bool, showHidden bool) {
 
 	for _, f := range files {
 		if !f.IsDir() {
-			if ugly {
-				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+			if isFileHidden(f) {
+				if showHidden {
+					if ugly {
+						fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+					} else {
+						fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+					}
+				}
 			} else {
-				fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+				if ugly {
+					fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+				} else {
+					fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+				}
 			}
 		}
 	}
