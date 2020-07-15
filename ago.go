@@ -96,8 +96,8 @@ func isFileExecutable(info os.FileInfo) bool {
 }
 
 func listFiles(ugly bool, showHidden bool) {
+	var filteredFiles []os.FileInfo
 	files, err := ioutil.ReadDir(".")
-	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 
 	if err != nil {
 		log.Fatal(err)
@@ -107,19 +107,25 @@ func listFiles(ugly bool, showHidden bool) {
 		if !f.IsDir() {
 			if isFileHidden(f) {
 				if showHidden {
-					if ugly {
-						fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
-					} else {
-						fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
-					}
+					filteredFiles = append(filteredFiles, f)
 				}
 			} else {
-				if ugly {
-					fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
-				} else {
-					fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
-				}
+				filteredFiles = append(filteredFiles, f)
 			}
+		}
+	}
+
+	outputResults(filteredFiles, ugly)
+}
+
+func outputResults(files []os.FileInfo, ugly bool) {
+	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
+
+	for _, f := range files {
+		if ugly {
+			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+		} else {
+			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
 		}
 	}
 
