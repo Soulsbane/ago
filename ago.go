@@ -18,7 +18,7 @@ func getModifedTime(info os.FileInfo, colorize bool) string {
 	modifiedTime := info.ModTime()
 
 	if colorize == true {
-		return color.BlueString(humanize.Time(modifiedTime))
+		return color.HiBlueString(humanize.Time(modifiedTime))
 	}
 
 	return humanize.Time(modifiedTime)
@@ -26,7 +26,7 @@ func getModifedTime(info os.FileInfo, colorize bool) string {
 
 func getFileSize(info os.FileInfo, colorize bool) string {
 	if colorize == true {
-		return color.RedString(humanize.Bytes(uint64(info.Size())))
+		return color.HiYellowString(humanize.Bytes(uint64(info.Size())))
 	}
 
 	return humanize.Bytes(uint64(info.Size()))
@@ -38,7 +38,7 @@ func getFileName(info os.FileInfo, colorize bool) string {
 			return color.HiRedString(info.Name())
 		}
 
-		return color.YellowString(info.Name())
+		return color.HiMagentaString(info.Name())
 	}
 
 	return info.Name()
