@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"text/tabwriter"
 
 	"github.com/alexflint/go-arg"
@@ -44,6 +45,18 @@ func getFileName(info os.FileInfo, colorize bool) string {
 
 func isFileHidden() bool {
 	return true
+}
+
+func getLinkPath(info os.FileInfo) string {
+	mode := info.Mode()
+	link := mode & os.ModeSymlink
+
+	if link != 0 {
+		linkPath, _ := filepath.EvalSymlinks(info.Name())
+		return linkPath
+	}
+
+	return ""
 }
 
 func isFileExecutable(info os.FileInfo) bool {
