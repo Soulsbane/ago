@@ -38,7 +38,7 @@ func getFileName(info os.FileInfo, colorize bool) string {
 			return color.HiRedString(info.Name())
 		}
 
-		return color.HiMagentaString(info.Name())
+		return color.WhiteString(info.Name())
 	}
 
 	return info.Name()
