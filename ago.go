@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"runtime"
 	"text/tabwriter"
 
@@ -33,17 +32,16 @@ func getFileSize(info os.FileInfo, colorize bool) string {
 }
 
 func getFileName(info os.FileInfo, colorize bool) string {
-	if colorize == true {
+	if colorize {
 		if isFileExecutable(info) {
 			return color.HiRedString(info.Name())
 		}
-
-		return color.WhiteString(info.Name())
 	}
 
 	return info.Name()
 }
 
+// INFO: Always returns false on windows as it's not supported.
 func isFileHidden(info os.FileInfo) bool {
 	if runtime.GOOS != "windows" {
 		if info.Name()[0:1] == "." {
@@ -52,36 +50,8 @@ func isFileHidden(info os.FileInfo) bool {
 
 		return false
 	}
-	// FIXME: Can't seem to find documentation for properly handling this on windows.
-	/*else {
-		//if runtime.GOOS == "windows" {
-		pointer, err := syscall.UTF16PtrFromString(info.Name())
 
-		if err != nil {
-			return false
-		}
-
-		attributes, err := syscall.GetFileAttributes(pointer)
-
-		if err != nil {
-			return false
-		}
-
-		return attributes&syscall.FILE_ATTRIBUTE_HIDDEN != 0
-	}*/
 	return false
-}
-
-func getLinkPath(info os.FileInfo) string {
-	mode := info.Mode()
-	link := mode & os.ModeSymlink
-
-	if link != 0 {
-		linkPath, _ := filepath.EvalSymlinks(info.Name())
-		return linkPath
-	}
-
-	return ""
 }
 
 func isFileExecutable(info os.FileInfo) bool {
