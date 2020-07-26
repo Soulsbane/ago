@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"sort"
 	"text/tabwriter"
 
 	"github.com/alexflint/go-arg"
@@ -65,7 +66,7 @@ func isFileExecutable(info os.FileInfo) bool {
 	return false
 }
 
-func listFiles(ugly bool, showHidden bool) {
+func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
 	var filteredFiles []os.FileInfo
 	files, err := ioutil.ReadDir(".")
 
@@ -85,10 +86,22 @@ func listFiles(ugly bool, showHidden bool) {
 		}
 	}
 
-	outputResults(filteredFiles, ugly)
+	outputResults(filteredFiles, ugly, sortByModTime)
 }
 
-func outputResults(files []os.FileInfo, ugly bool) {
+func sortResults(files []os.FileInfo) []os.FileInfo {
+	sort.Slice(files, func(i, j int) bool {
+		return files[i].ModTime().Unix() < files[j].ModTime().Unix()
+	})
+
+	return files
+}
+
+func outputResults(files []os.FileInfo, ugly bool, sortByModTime bool) {
+	if sortByModTime {
+		files = sortResults(files)
+	}
+
 	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 
 	for _, f := range files {
@@ -106,8 +119,9 @@ func main() {
 	var args struct {
 		Ugly   bool `arg:"-u" default:"false" help:"Remove colorized output. Yes it's ugly."`
 		Hidden bool `arg:"-i" default:"false" help:"Show hidden files."`
+		Sort   bool `arg:"-s" default:"false" help:"Sorts the files by file modification time."`
 	}
 
 	arg.MustParse(&args)
-	listFiles(args.Ugly, args.Hidden)
+	listFiles(args.Ugly, args.Hidden, args.Sort)
 }
