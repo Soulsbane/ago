@@ -89,6 +89,7 @@ func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
 	outputResults(filteredFiles, ugly, sortByModTime)
 }
 
+// TODO Possibly add more sorting options
 func sortResults(files []os.FileInfo) []os.FileInfo {
 	sort.Slice(files, func(i, j int) bool {
 		return files[i].ModTime().Unix() < files[j].ModTime().Unix()
@@ -97,6 +98,7 @@ func sortResults(files []os.FileInfo) []os.FileInfo {
 	return files
 }
 
+// FIXME: Still some problems lining up correctly.
 func outputResults(files []os.FileInfo, ugly bool, sortByModTime bool) {
 	if sortByModTime {
 		files = sortResults(files)
@@ -117,9 +119,9 @@ func outputResults(files []os.FileInfo, ugly bool, sortByModTime bool) {
 
 func main() {
 	var args struct {
-		Ugly   bool `arg:"-u" default:"false" help:"Remove colorized output. Yes it's ugly."`
-		Hidden bool `arg:"-i" default:"false" help:"Show hidden files."`
-		Sort   bool `arg:"-s" default:"false" help:"Sorts the files by file modification time."`
+		Ugly   bool `arg:"-u, --ugly" default:"false" help:"Remove colorized output. Yes it's ugly."`
+		Hidden bool `arg:"-a, --all" default:"false" help:"Show hidden files also."`
+		Sort   bool `arg:"-s, --sort" default:"false" help:"Sorts the files by file modification time."`
 	}
 
 	arg.MustParse(&args)
