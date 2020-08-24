@@ -97,7 +97,6 @@ func sortResults(files []os.FileInfo) []os.FileInfo {
 	return files
 }
 
-// FIXME: Still some problems lining up correctly.
 func outputResults(files []os.FileInfo, ugly bool, sortByModTime bool) {
 	if sortByModTime {
 		files = sortResults(files)
