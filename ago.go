@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime"
 	"sort"
+	"strings"
 	"text/tabwriter"
 
 	"github.com/alexflint/go-arg"
@@ -45,11 +46,9 @@ func getFileName(info os.FileInfo, colorize bool) string {
 // INFO: Always returns false on windows as it's not supported.
 func isFileHidden(info os.FileInfo) bool {
 	if runtime.GOOS != "windows" {
-		if info.Name()[0:1] == "." {
+		if strings.HasPrefix(info.Name(), ".") {
 			return true
 		}
-
-		return false
 	}
 
 	return false
