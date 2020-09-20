@@ -94,7 +94,7 @@ func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
 // TODO Possibly add more sorting options
 func sortResults(files []os.FileInfo) []os.FileInfo {
 	sort.Slice(files, func(i, j int) bool {
-		return files[i].ModTime().Unix() < files[j].ModTime().Unix()
+		return files[i].ModTime().Unix() > files[j].ModTime().Unix()
 	})
 
 	return files
