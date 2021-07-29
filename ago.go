@@ -35,7 +35,7 @@ func getFileSize(info os.FileInfo, colorize bool) string {
 
 func getFileName(info os.FileInfo, colorize bool) string {
 	if colorize {
-		if isFileExecutable(info) {
+		if isFileExecutable(info.Mode()) {
 			return color.HiRedString(info.Name())
 		}
 
@@ -57,15 +57,8 @@ func isFileHidden(info os.FileInfo) bool {
 	return false
 }
 
-func isFileExecutable(info os.FileInfo) bool {
-	mode := info.Mode()
-	exec := mode & 0111
-
-	if exec != 0 {
-		return true
-	}
-
-	return false
+func isFileExecutable(mode os.FileMode) bool {
+	return mode&0111 != 0
 }
 
 func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
