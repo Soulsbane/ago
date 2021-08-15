@@ -58,12 +58,6 @@ func isFileHidden(info os.FileInfo) bool {
 }
 
 func isFileExecutable(info os.FileInfo) bool {
-	if runtime.GOOS == "windows" {
-		if strings.HasSuffix(info.Name(), ".exe") {
-			return true
-		}
-	}
-
 	return info.Mode()&0111 != 0
 }
 
