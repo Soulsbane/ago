@@ -43,7 +43,6 @@ func getFileName(info os.FileInfo, colorize bool) string {
 	}
 
 	return info.Name()
-
 }
 
 // INFO: Always returns false on windows as it's not supported.
