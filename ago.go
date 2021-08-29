@@ -60,7 +60,8 @@ func isFileExecutable(info os.FileInfo) bool {
 	return info.Mode()&0111 != 0
 }
 
-func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
+// TODO: Check for links
+func getListOfFiles(showHidden bool) []os.FileInfo {
 	var filteredFiles []os.FileInfo
 	files, err := ioutil.ReadDir(".")
 
@@ -80,7 +81,7 @@ func listFiles(ugly bool, showHidden bool, sortByModTime bool) {
 		}
 	}
 
-	outputResults(filteredFiles, ugly, sortByModTime)
+	return filteredFiles
 }
 
 // TODO Possibly add more sorting options
@@ -118,5 +119,11 @@ func main() {
 	}
 
 	arg.MustParse(&args)
-	listFiles(args.Ugly, args.Hidden, args.Sort)
+	files := getListOfFiles(args.Hidden)
+
+	if args.Sort {
+		files = sortResults(files)
+	}
+
+	outputResults(files, args.Ugly, args.Sort)
 }
