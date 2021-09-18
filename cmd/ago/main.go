@@ -38,8 +38,6 @@ func getFileName(info os.FileInfo, colorize bool) string {
 		if isFileExecutable(info) {
 			return color.HiRedString(info.Name())
 		}
-
-		return color.WhiteString(info.Name())
 	}
 
 	return info.Name()
