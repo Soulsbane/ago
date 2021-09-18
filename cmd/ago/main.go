@@ -62,7 +62,7 @@ func isFileExecutable(info os.FileInfo) bool {
 
 // TODO: Check for links
 func getListOfFiles(showHidden bool) []os.FileInfo {
-	var filteredFiles []os.FileInfo
+	var fileList []os.FileInfo
 	files, err := ioutil.ReadDir(".")
 
 	if err != nil {
@@ -73,15 +73,15 @@ func getListOfFiles(showHidden bool) []os.FileInfo {
 		if !f.IsDir() {
 			if isFileHidden(f) {
 				if showHidden {
-					filteredFiles = append(filteredFiles, f)
+					fileList = append(fileList, f)
 				}
 			} else {
-				filteredFiles = append(filteredFiles, f)
+				fileList = append(fileList, f)
 			}
 		}
 	}
 
-	return filteredFiles
+	return fileList
 }
 
 // TODO Possibly add more sorting options
