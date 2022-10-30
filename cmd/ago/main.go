@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
@@ -15,7 +14,8 @@ import (
 	"github.com/fatih/color"
 )
 
-func getModifedTime(info os.FileInfo, colorize bool) string {
+func getModifedTime(entry os.DirEntry, colorize bool) string {
+	info, _ := entry.Info()
 	modifiedTime := info.ModTime()
 
 	if colorize {
@@ -25,7 +25,9 @@ func getModifedTime(info os.FileInfo, colorize bool) string {
 	return humanize.Time(modifiedTime)
 }
 
-func getFileSize(info os.FileInfo, colorize bool) string {
+func getFileSize(entry os.DirEntry, colorize bool) string {
+	info, _ := entry.Info()
+
 	if colorize {
 		return color.HiYellowString(humanize.Bytes(uint64(info.Size())))
 	}
@@ -33,7 +35,9 @@ func getFileSize(info os.FileInfo, colorize bool) string {
 	return humanize.Bytes(uint64(info.Size()))
 }
 
-func getFileName(info os.FileInfo, colorize bool) string {
+func getFileName(entry os.DirEntry, colorize bool) string {
+	info, _ := entry.Info()
+
 	if colorize {
 		if isFileExecutable(info) {
 			return color.HiRedString(info.Name())
@@ -44,9 +48,9 @@ func getFileName(info os.FileInfo, colorize bool) string {
 }
 
 // INFO: Always returns false on windows as it's not supported.
-func isFileHidden(info os.FileInfo) bool {
+func isFileHidden(name string) bool {
 	if runtime.GOOS != "windows" {
-		if strings.HasPrefix(info.Name(), ".") {
+		if strings.HasPrefix(name, ".") {
 			return true
 		}
 	}
@@ -59,9 +63,9 @@ func isFileExecutable(info os.FileInfo) bool {
 }
 
 // TODO: Check for links
-func getListOfFiles(showHidden bool) []os.FileInfo {
-	var fileList []os.FileInfo
-	files, err := ioutil.ReadDir(".")
+func getListOfFiles(showHidden bool) []os.DirEntry {
+	var fileList []os.DirEntry
+	files, err := os.ReadDir(".")
 
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +73,7 @@ func getListOfFiles(showHidden bool) []os.FileInfo {
 
 	for _, f := range files {
 		if !f.IsDir() {
-			if isFileHidden(f) {
+			if isFileHidden(f.Name()) {
 				if showHidden {
 					fileList = append(fileList, f)
 				}
@@ -83,15 +87,17 @@ func getListOfFiles(showHidden bool) []os.FileInfo {
 }
 
 // TODO Possibly add more sorting options
-func sortResults(files []os.FileInfo) []os.FileInfo {
+func sortResults(files []os.DirEntry) []os.DirEntry {
 	sort.Slice(files, func(i, j int) bool {
-		return files[i].ModTime().Unix() > files[j].ModTime().Unix()
+		infoI, _ := files[i].Info()
+		infoJ, _ := files[i].Info()
+		return infoI.ModTime().Unix() > infoJ.ModTime().Unix()
 	})
 
 	return files
 }
 
-func outputResults(files []os.FileInfo, ugly bool, sortByModTime bool) {
+func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool) {
 	if sortByModTime {
 		files = sortResults(files)
 	}
