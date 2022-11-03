@@ -1,17 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"runtime"
 	"sort"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
+	"github.com/jedib0t/go-pretty/v6/table"
 )
 
 func getModifedTime(entry os.DirEntry, colorize bool) string {
@@ -98,21 +97,24 @@ func sortResults(files []os.DirEntry) []os.DirEntry {
 }
 
 func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool) {
+	dirDataTable := table.NewWriter()
+	dirDataTable.SetOutputMirror(os.Stdout)
+	dirDataTable.AppendHeader(table.Row{"Name", "Size", "Modified"})
+
 	if sortByModTime {
 		files = sortResults(files)
 	}
 
-	writer := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
-
 	for _, f := range files {
 		if ugly {
-			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, false), getFileSize(f, false), getModifedTime(f, false))
+			dirDataTable.AppendRow(table.Row{getFileName(f, false), getFileSize(f, false), getModifedTime(f, false)})
 		} else {
-			fmt.Fprintf(writer, "%s\t%s\t%s\t\n", getFileName(f, true), getFileSize(f, true), getModifedTime(f, true))
+			dirDataTable.AppendRow(table.Row{getFileName(f, true), getFileSize(f, true), getModifedTime(f, true)})
 		}
 	}
 
-	writer.Flush()
+	dirDataTable.SetStyle(table.StyleRounded)
+	dirDataTable.Render()
 }
 
 func main() {
