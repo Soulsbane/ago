@@ -96,10 +96,13 @@ func sortResults(files []os.DirEntry) []os.DirEntry {
 	return files
 }
 
-func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool) {
+func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool, noTable bool) {
 	dirDataTable := table.NewWriter()
 	dirDataTable.SetOutputMirror(os.Stdout)
-	dirDataTable.AppendHeader(table.Row{"Name", "Size", "Modified"})
+
+	if !noTable {
+		dirDataTable.AppendHeader(table.Row{"Name", "Size", "Modified"})
+	}
 
 	if sortByModTime {
 		files = sortResults(files)
@@ -114,6 +117,14 @@ func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool) {
 	}
 
 	dirDataTable.SetStyle(table.StyleRounded)
+
+	if noTable {
+		dirDataTable.Style().Options.DrawBorder = false
+		dirDataTable.Style().Options.SeparateColumns = false
+		dirDataTable.Style().Options.SeparateRows = false
+		dirDataTable.Style().Options.SeparateHeader = false
+	}
+
 	dirDataTable.Render()
 }
 
@@ -127,5 +138,5 @@ func main() {
 		files = sortResults(files)
 	}
 
-	outputResults(files, args.Ugly, args.Sort)
+	outputResults(files, args.Ugly, args.Sort, args.NoTable)
 }
