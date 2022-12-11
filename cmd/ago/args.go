@@ -6,3 +6,7 @@ type ProgramArgs struct {
 	Hidden  bool `arg:"-a, --all" default:"false" help:"Show hidden files also."`
 	Sort    bool `arg:"-s, --sort" default:"false" help:"Sorts the files by file modification time."`
 }
+
+func (args ProgramArgs) Description() string {
+	return "List files of a directory in a human readable format with colorized output optionally included"
+}
