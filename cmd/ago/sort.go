@@ -8,7 +8,7 @@ import (
 func sortByModTime(files []os.DirEntry) []os.DirEntry {
 	sort.Slice(files, func(i, j int) bool {
 		infoI, _ := files[i].Info()
-		infoJ, _ := files[i].Info()
+		infoJ, _ := files[j].Info()
 		return infoI.ModTime().Unix() > infoJ.ModTime().Unix()
 	})
 
@@ -18,7 +18,7 @@ func sortByModTime(files []os.DirEntry) []os.DirEntry {
 func sortBySize(files []os.DirEntry) []os.DirEntry {
 	sort.Slice(files, func(i, j int) bool {
 		infoI, _ := files[i].Info()
-		infoJ, _ := files[i].Info()
+		infoJ, _ := files[j].Info()
 		return infoI.Size() > infoJ.Size()
 	})
 
@@ -28,7 +28,7 @@ func sortBySize(files []os.DirEntry) []os.DirEntry {
 func sortByFileName(files []os.DirEntry) []os.DirEntry {
 	sort.Slice(files, func(i, j int) bool {
 		infoI, _ := files[i].Info()
-		infoJ, _ := files[i].Info()
+		infoJ, _ := files[j].Info()
 		return infoI.Name() > infoJ.Name()
 	})
 
