@@ -13,7 +13,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-func getModifedTime(entry os.DirEntry, colorize bool) string {
+func getModifiedTime(entry os.DirEntry, colorize bool) string {
 	info, _ := entry.Info()
 	modifiedTime := info.ModTime()
 
@@ -106,9 +106,9 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{getFileName(f, false), getFileSize(f, false), getModifedTime(f, false)})
+			dirDataTable.AppendRow(table.Row{getFileName(f, false), getFileSize(f, false), getModifiedTime(f, false)})
 		} else {
-			dirDataTable.AppendRow(table.Row{getFileName(f, true), getFileSize(f, true), getModifedTime(f, true)})
+			dirDataTable.AppendRow(table.Row{getFileName(f, true), getFileSize(f, true), getModifiedTime(f, true)})
 		}
 	}
 
