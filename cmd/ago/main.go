@@ -96,16 +96,12 @@ func sortResults(files []os.DirEntry) []os.DirEntry {
 	return files
 }
 
-func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool, noTable bool) {
+func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 	dirDataTable := table.NewWriter()
 	dirDataTable.SetOutputMirror(os.Stdout)
 
 	if !noTable {
 		dirDataTable.AppendHeader(table.Row{"Name", "Size", "Modified"})
-	}
-
-	if sortByModTime {
-		files = sortResults(files)
 	}
 
 	for _, f := range files {
@@ -131,12 +127,18 @@ func outputResults(files []os.DirEntry, ugly bool, sortByModTime bool, noTable b
 func main() {
 	var args ProgramArgs
 
-	arg.MustParse(&args)
+	p := arg.MustParse(&args)
 	files := getListOfFiles(args.Hidden)
 
-	if args.Sort {
-		files = sortResults(files)
+	if args.SortBy == "name" {
+		files = sortByFileName(files)
+	} else if args.SortBy == "size" {
+		files = sortBySize(files)
+	} else if args.SortBy == "modified" {
+		files = sortByModTime(files)
+	} else {
+		p.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
 
-	outputResults(files, args.Ugly, args.Sort, args.NoTable)
+	outputResults(files, args.Ugly, args.NoTable)
 }
