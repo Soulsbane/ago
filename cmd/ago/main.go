@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"runtime"
-	"sort"
 	"strings"
 
 	"github.com/alexflint/go-arg"
@@ -83,17 +82,6 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 	}
 
 	return fileList
-}
-
-// TODO Possibly add more sorting options
-func sortResults(files []os.DirEntry) []os.DirEntry {
-	sort.Slice(files, func(i, j int) bool {
-		infoI, _ := files[i].Info()
-		infoJ, _ := files[i].Info()
-		return infoI.ModTime().Unix() > infoJ.ModTime().Unix()
-	})
-
-	return files
 }
 
 func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
