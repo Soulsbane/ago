@@ -85,7 +85,9 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 }
 
 func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
+	var totalFileSize int64
 	dirDataTable := table.NewWriter()
+
 	dirDataTable.SetOutputMirror(os.Stdout)
 
 	if !noTable {
@@ -95,8 +97,13 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 	for _, f := range files {
 		if ugly {
 			dirDataTable.AppendRow(table.Row{getFileName(f, false), getFileSize(f, false), getModifiedTime(f, false)})
+			info, _ := f.Info()
+			totalFileSize += info.Size()
+
 		} else {
 			dirDataTable.AppendRow(table.Row{getFileName(f, true), getFileSize(f, true), getModifiedTime(f, true)})
+			info, _ := f.Info()
+			totalFileSize += info.Size()
 		}
 	}
 
@@ -107,7 +114,11 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 		dirDataTable.Style().Options.SeparateColumns = false
 		dirDataTable.Style().Options.SeparateRows = false
 		dirDataTable.Style().Options.SeparateHeader = false
+		dirDataTable.Style().Options.SeparateFooter = false
 	}
+
+	dirDataTable.AppendSeparator()
+	dirDataTable.AppendFooter(table.Row{"TOTAL", humanize.Bytes(uint64(totalFileSize))})
 
 	dirDataTable.Render()
 }
