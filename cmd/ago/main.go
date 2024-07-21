@@ -107,14 +107,10 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 		}
 	}
 
-	dirDataTable.SetStyle(table.StyleRounded)
-
 	if noTable {
-		dirDataTable.Style().Options.DrawBorder = false
-		dirDataTable.Style().Options.SeparateColumns = false
-		dirDataTable.Style().Options.SeparateRows = false
-		dirDataTable.Style().Options.SeparateHeader = false
-		dirDataTable.Style().Options.SeparateFooter = false
+		dirDataTable.SetStyle(agoNoStyle)
+	} else {
+		dirDataTable.SetStyle(agoDefaultStyle)
 	}
 
 	dirDataTable.AppendSeparator()
