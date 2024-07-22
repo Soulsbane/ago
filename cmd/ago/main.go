@@ -122,7 +122,7 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 func main() {
 	var args ProgramArgs
 
-	p := arg.MustParse(&args)
+	parser := arg.MustParse(&args)
 	files := getListOfFiles(args.Hidden)
 
 	if args.SortBy == "name" {
@@ -132,7 +132,7 @@ func main() {
 	} else if args.SortBy == "modified" {
 		files = sortByModTime(files)
 	} else {
-		p.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
+		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
 
 	outputResults(files, args.Ugly, args.NoTable)
