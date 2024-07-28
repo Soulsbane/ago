@@ -33,16 +33,21 @@ func getFileSize(entry os.DirEntry, colorize bool) string {
 	return humanize.Bytes(uint64(info.Size()))
 }
 
-func getFileName(entry os.DirEntry, colorize bool) string {
+func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	info, _ := entry.Info()
+	linkText := ""
+
+	if !noLinks && isFileLink(entry) {
+		linkText = color.HiMagentaString("(link)")
+	}
 
 	if colorize {
 		if isFileExecutable(info) {
-			return color.HiRedString(info.Name())
+			return color.HiRedString(info.Name() + " " + linkText)
 		}
 	}
 
-	return info.Name()
+	return info.Name() + " " + linkText
 }
 
 // INFO: Always returns false on windows as it's not supported.
@@ -60,6 +65,11 @@ func isFileExecutable(info os.FileInfo) bool {
 	return info.Mode()&0111 != 0
 }
 
+func isFileLink(info os.DirEntry) bool {
+	f, _ := info.Info()
+	return f.Mode()&os.ModeSymlink != 0
+}
+
 // TODO: Check for links
 func getListOfFiles(showHidden bool) []os.DirEntry {
 	var fileList []os.DirEntry
@@ -68,7 +78,6 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	for _, f := range files {
 		if !f.IsDir() {
 			if isFileHidden(f.Name()) {
@@ -84,7 +93,7 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 	return fileList
 }
 
-func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
+func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool) {
 	var totalFileSize int64
 	dirDataTable := table.NewWriter()
 
@@ -96,12 +105,12 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool) {
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{getFileName(f, false), getFileSize(f, false), getModifiedTime(f, false)})
+			dirDataTable.AppendRow(table.Row{getFileName(f, false, showLinks), getFileSize(f, false), getModifiedTime(f, false)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 
 		} else {
-			dirDataTable.AppendRow(table.Row{getFileName(f, true), getFileSize(f, true), getModifiedTime(f, true)})
+			dirDataTable.AppendRow(table.Row{getFileName(f, true, showLinks), getFileSize(f, true), getModifiedTime(f, true)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 		}
@@ -135,5 +144,5 @@ func main() {
 		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
 
-	outputResults(files, args.Ugly, args.NoTable)
+	outputResults(files, args.Ugly, args.NoTable, args.NoLinks)
 }
