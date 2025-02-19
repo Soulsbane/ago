@@ -100,17 +100,17 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool)
 	dirDataTable.SetOutputMirror(os.Stdout)
 
 	if !noTable {
-		dirDataTable.AppendHeader(table.Row{"Name", "Size", "Modified"})
+		dirDataTable.AppendHeader(table.Row{"Modified", "Size", "Name"})
 	}
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{getFileName(f, false, showLinks), getFileSize(f, false), getModifiedTime(f, false)})
+			dirDataTable.AppendRow(table.Row{getModifiedTime(f, false), getFileSize(f, false), getFileName(f, false, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 
 		} else {
-			dirDataTable.AppendRow(table.Row{getFileName(f, true, showLinks), getFileSize(f, true), getModifiedTime(f, true)})
+			dirDataTable.AppendRow(table.Row{getModifiedTime(f, true), getFileSize(f, true), getFileName(f, true, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 		}
