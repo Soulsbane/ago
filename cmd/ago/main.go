@@ -43,7 +43,7 @@ func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	}
 
 	if colorize {
-		if isFileExecutable(info) {
+		if fileutils.IsFileExecutable(info) {
 			return color.HiRedString(info.Name() + " " + linkText)
 		}
 	}
@@ -60,10 +60,6 @@ func isFileHidden(name string) bool {
 	}
 
 	return false
-}
-
-func isFileExecutable(info os.FileInfo) bool {
-	return info.Mode()&0111 != 0
 }
 
 // TODO: Check for links

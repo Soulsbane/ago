@@ -13,6 +13,10 @@ func FileOrPathExists(fileName string) bool {
 	return true
 }
 
+func IsFileExecutable(info os.FileInfo) bool {
+	return info.Mode()&0111 != 0
+}
+
 func IsLink(info os.DirEntry) bool {
 	f, _ := info.Info()
 	return f.Mode()&os.ModeSymlink != 0
