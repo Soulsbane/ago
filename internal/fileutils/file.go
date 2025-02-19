@@ -13,8 +13,9 @@ func FileOrPathExists(fileName string) bool {
 	return true
 }
 
-func IsLink(info os.FileMode) bool {
-	return info&os.ModeSymlink != 0
+func IsLink(info os.DirEntry) bool {
+	f, _ := info.Info()
+	return f.Mode()&os.ModeSymlink != 0
 }
 
 // GetLinkPath returns the path of the link and a boolean indicating if the link destination path exists

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Soulsbane/ago/internal/fileutils"
 	"log"
 	"os"
 	"runtime"
@@ -37,7 +38,7 @@ func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	info, _ := entry.Info()
 	linkText := ""
 
-	if !noLinks && isFileLink(entry) {
+	if !noLinks && fileutils.IsLink(entry) {
 		linkText = color.HiMagentaString("(link)")
 	}
 
@@ -63,11 +64,6 @@ func isFileHidden(name string) bool {
 
 func isFileExecutable(info os.FileInfo) bool {
 	return info.Mode()&0111 != 0
-}
-
-func isFileLink(info os.DirEntry) bool {
-	f, _ := info.Info()
-	return f.Mode()&os.ModeSymlink != 0
 }
 
 // TODO: Check for links
