@@ -45,6 +45,25 @@ func GetFileSize(entry os.DirEntry, colorize bool) string {
 	return humanize.Bytes(uint64(info.Size()))
 }
 
+func GetFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
+	info, _ := entry.Info()
+	name := info.Name()
+	linkText := ""
+
+	if !noLinks && IsLink(entry) {
+		path, _ := GetLinkPath(name)
+		linkText = "-> " + path
+	}
+
+	if colorize {
+		if IsFileExecutable(info) {
+			return color.HiRedString(name+" ") + color.HiBlueString(linkText)
+		}
+	}
+
+	return name + " " + linkText
+}
+
 // GetLinkPath returns the path of the link and a boolean indicating if the link destination path exists
 func GetLinkPath(name string) (string, bool) {
 	realPath, err := os.Readlink(name)

@@ -4,31 +4,11 @@ import (
 	"github.com/Soulsbane/ago/internal/fileutils"
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
-	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	hidden "github.com/tobychui/goHidden"
 	"log"
 	"os"
 )
-
-func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
-	info, _ := entry.Info()
-	name := info.Name()
-	linkText := ""
-
-	if !noLinks && fileutils.IsLink(entry) {
-		path, _ := fileutils.GetLinkPath(name)
-		linkText = "-> " + path
-	}
-
-	if colorize {
-		if fileutils.IsFileExecutable(info) {
-			return color.HiRedString(name+" ") + color.HiBlueString(linkText)
-		}
-	}
-
-	return name + " " + linkText
-}
 
 // TODO: Check for links
 func getListOfFiles(showHidden bool) []os.DirEntry {
@@ -68,12 +48,12 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool)
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, false), fileutils.GetFileSize(f, false), getFileName(f, false, showLinks)})
+			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, false), fileutils.GetFileSize(f, false), fileutils.GetFileName(f, false, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 
 		} else {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, true), fileutils.GetFileSize(f, true), getFileName(f, true, showLinks)})
+			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, true), fileutils.GetFileSize(f, true), fileutils.GetFileName(f, true, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 		}
