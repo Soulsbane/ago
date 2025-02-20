@@ -36,19 +36,21 @@ func getFileSize(entry os.DirEntry, colorize bool) string {
 
 func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	info, _ := entry.Info()
+	name := info.Name()
 	linkText := ""
 
 	if !noLinks && fileutils.IsLink(entry) {
-		linkText = color.HiMagentaString("(link)")
+		path, _ := fileutils.GetLinkPath(name)
+		linkText = "-> " + path
 	}
 
 	if colorize {
 		if fileutils.IsFileExecutable(info) {
-			return color.HiRedString(info.Name() + " " + linkText)
+			return color.HiRedString(name+" ") + color.HiBlueString(linkText)
 		}
 	}
 
-	return info.Name() + " " + linkText
+	return name + " " + linkText
 }
 
 // INFO: Always returns false on windows as it's not supported.
