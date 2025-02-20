@@ -2,6 +2,8 @@ package fileutils
 
 import (
 	"errors"
+	"github.com/dustin/go-humanize"
+	"github.com/fatih/color"
 	"os"
 )
 
@@ -20,6 +22,17 @@ func IsFileExecutable(info os.FileInfo) bool {
 func IsLink(info os.DirEntry) bool {
 	f, _ := info.Info()
 	return f.Mode()&os.ModeSymlink != 0
+}
+
+func GetModifiedTime(entry os.DirEntry, colorize bool) string {
+	info, _ := entry.Info()
+	modifiedTime := info.ModTime()
+
+	if colorize {
+		return color.HiBlueString(humanize.Time(modifiedTime))
+	}
+
+	return humanize.Time(modifiedTime)
 }
 
 // GetLinkPath returns the path of the link and a boolean indicating if the link destination path exists
