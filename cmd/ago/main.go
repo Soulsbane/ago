@@ -11,16 +11,6 @@ import (
 	"os"
 )
 
-func getFileSize(entry os.DirEntry, colorize bool) string {
-	info, _ := entry.Info()
-
-	if colorize {
-		return color.HiYellowString(humanize.Bytes(uint64(info.Size())))
-	}
-
-	return humanize.Bytes(uint64(info.Size()))
-}
-
 func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	info, _ := entry.Info()
 	name := info.Name()
@@ -78,12 +68,12 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool)
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, false), getFileSize(f, false), getFileName(f, false, showLinks)})
+			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, false), fileutils.GetFileSize(f, false), getFileName(f, false, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 
 		} else {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, true), getFileSize(f, true), getFileName(f, true, showLinks)})
+			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, true), fileutils.GetFileSize(f, true), getFileName(f, true, showLinks)})
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 		}

@@ -35,6 +35,16 @@ func GetModifiedTime(entry os.DirEntry, colorize bool) string {
 	return humanize.Time(modifiedTime)
 }
 
+func GetFileSize(entry os.DirEntry, colorize bool) string {
+	info, _ := entry.Info()
+
+	if colorize {
+		return color.HiYellowString(humanize.Bytes(uint64(info.Size())))
+	}
+
+	return humanize.Bytes(uint64(info.Size()))
+}
+
 // GetLinkPath returns the path of the link and a boolean indicating if the link destination path exists
 func GetLinkPath(name string) (string, bool) {
 	realPath, err := os.Readlink(name)
