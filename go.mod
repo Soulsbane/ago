@@ -8,4 +8,5 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/jedib0t/go-pretty/v6 v6.6.6
 	github.com/mattn/go-colorable v0.1.14 // indirect
+	github.com/tobychui/goHidden v0.0.0-20210912041315-888f0999f674
 )

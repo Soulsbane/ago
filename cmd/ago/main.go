@@ -2,15 +2,13 @@ package main
 
 import (
 	"github.com/Soulsbane/ago/internal/fileutils"
-	"log"
-	"os"
-	"runtime"
-	"strings"
-
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
+	hidden "github.com/tobychui/goHidden"
+	"log"
+	"os"
 )
 
 func getModifiedTime(entry os.DirEntry, colorize bool) string {
@@ -53,17 +51,6 @@ func getFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	return name + " " + linkText
 }
 
-// INFO: Always returns false on windows as it's not supported.
-func isFileHidden(name string) bool {
-	if runtime.GOOS != "windows" {
-		if strings.HasPrefix(name, ".") {
-			return true
-		}
-	}
-
-	return false
-}
-
 // TODO: Check for links
 func getListOfFiles(showHidden bool) []os.DirEntry {
 	var fileList []os.DirEntry
@@ -72,9 +59,12 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	for _, f := range files {
 		if !f.IsDir() {
-			if isFileHidden(f.Name()) {
+			isHidden, _ := hidden.IsHidden(f.Name(), false)
+
+			if isHidden {
 				if showHidden {
 					fileList = append(fileList, f)
 				}
