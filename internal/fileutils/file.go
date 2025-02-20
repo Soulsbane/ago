@@ -49,15 +49,20 @@ func GetFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
 	info, _ := entry.Info()
 	name := info.Name()
 	linkText := ""
+	path, _ := GetLinkPath(name)
 
 	if !noLinks && IsLink(entry) {
-		path, _ := GetLinkPath(name)
 		linkText = "-> " + path
 	}
 
 	if colorize {
+		// If the path doesn't exist due to a broken link then display it in red
+		if !FileOrPathExists(path) {
+			return color.HiRedString(name + " " + linkText)
+		}
+
 		if IsFileExecutable(info) {
-			return color.HiRedString(name+" ") + color.HiBlueString(linkText)
+			return color.HiBlueString(name + " " + linkText)
 		}
 	}
 
