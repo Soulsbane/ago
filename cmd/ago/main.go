@@ -48,12 +48,22 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool)
 
 	for _, f := range files {
 		if ugly {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, false), fileutils.GetFileSize(f, false), fileutils.GetFileName(f, false, showLinks)})
+			dirDataTable.AppendRow(table.Row{
+				fileutils.GetModifiedTime(f, false),
+				fileutils.GetFileSize(f, false),
+				fileutils.GetFileName(f, false, showLinks),
+			})
+
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 
 		} else {
-			dirDataTable.AppendRow(table.Row{fileutils.GetModifiedTime(f, true), fileutils.GetFileSize(f, true), fileutils.GetFileName(f, true, showLinks)})
+			dirDataTable.AppendRow(table.Row{
+				fileutils.GetModifiedTime(f, true),
+				fileutils.GetFileSize(f, true),
+				fileutils.GetFileName(f, true, showLinks),
+			})
+
 			info, _ := f.Info()
 			totalFileSize += info.Size()
 		}
