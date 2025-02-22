@@ -25,6 +25,7 @@ func getListOfFiles(showHidden bool) []fileutils.FileInfo {
 			info, _ := f.Info()
 
 			file.Name = f.Name()
+			file.Executable = fileutils.IsFileExecutable(info)
 			file.HumanizeSize = fileutils.GetFileSize(f)
 			file.RawSize = info.Size()
 			file.HumanizeModified = fileutils.GetModifiedTime(f)
