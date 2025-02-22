@@ -10,9 +10,8 @@ import (
 	"os"
 )
 
-// TODO: Check for links
-func getListOfFiles(showHidden bool) []os.DirEntry {
-	var fileList []os.DirEntry
+func getListOfFiles(showHidden bool) []fileutils.FileInfo {
+	var fileList []fileutils.FileInfo
 	files, err := os.ReadDir(".")
 
 	if err != nil {
@@ -21,14 +20,26 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 
 	for _, f := range files {
 		if !f.IsDir() {
+			var file fileutils.FileInfo
 			isHidden, _ := hidden.IsHidden(f.Name(), false)
+			info, _ := f.Info()
+
+			file.Name = f.Name()
+			file.HumanizeSize = fileutils.GetFileSize(f, true)
+			file.RawSize = info.Size()
+			file.HumanizeModified = fileutils.GetModifiedTime(f, true)
+			file.Modified = info.ModTime().Unix()
+
+			if fileutils.IsLink(f) {
+				file.LinkPath, _ = fileutils.GetLinkPath(f.Name())
+			}
 
 			if isHidden {
 				if showHidden {
-					fileList = append(fileList, f)
+					fileList = append(fileList, file)
 				}
 			} else {
-				fileList = append(fileList, f)
+				fileList = append(fileList, file)
 			}
 		}
 	}
@@ -36,7 +47,7 @@ func getListOfFiles(showHidden bool) []os.DirEntry {
 	return fileList
 }
 
-func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool) {
+func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool) {
 	var totalFileSize int64
 	dirDataTable := table.NewWriter()
 
@@ -49,23 +60,21 @@ func outputResults(files []os.DirEntry, ugly bool, noTable bool, showLinks bool)
 	for _, f := range files {
 		if ugly {
 			dirDataTable.AppendRow(table.Row{
-				fileutils.GetModifiedTime(f, false),
-				fileutils.GetFileSize(f, false),
-				fileutils.GetFileName(f, false, showLinks),
+				f.HumanizeModified,
+				f.HumanizeSize,
+				f.Name,
 			})
 
-			info, _ := f.Info()
-			totalFileSize += info.Size()
+			totalFileSize += f.RawSize
 
 		} else {
 			dirDataTable.AppendRow(table.Row{
-				fileutils.GetModifiedTime(f, true),
-				fileutils.GetFileSize(f, true),
-				fileutils.GetFileName(f, true, showLinks),
+				f.HumanizeModified,
+				f.HumanizeSize,
+				f.Name,
 			})
 
-			info, _ := f.Info()
-			totalFileSize += info.Size()
+			totalFileSize += f.RawSize
 		}
 	}
 

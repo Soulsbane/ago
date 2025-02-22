@@ -1,35 +1,29 @@
 package main
 
 import (
-	"os"
+	"github.com/Soulsbane/ago/internal/fileutils"
 	"sort"
 )
 
-func sortByModTime(files []os.DirEntry) []os.DirEntry {
+func sortByModTime(files []fileutils.FileInfo) []fileutils.FileInfo {
 	sort.Slice(files, func(i, j int) bool {
-		infoI, _ := files[i].Info()
-		infoJ, _ := files[j].Info()
-		return infoI.ModTime().Unix() > infoJ.ModTime().Unix()
+		return files[i].Modified > files[j].Modified
 	})
 
 	return files
 }
 
-func sortBySize(files []os.DirEntry) []os.DirEntry {
+func sortBySize(files []fileutils.FileInfo) []fileutils.FileInfo {
 	sort.Slice(files, func(i, j int) bool {
-		infoI, _ := files[i].Info()
-		infoJ, _ := files[j].Info()
-		return infoI.Size() > infoJ.Size()
+		return files[i].RawSize > files[j].RawSize
 	})
 
 	return files
 }
 
-func sortByFileName(files []os.DirEntry) []os.DirEntry {
+func sortByFileName(files []fileutils.FileInfo) []fileutils.FileInfo {
 	sort.Slice(files, func(i, j int) bool {
-		infoI, _ := files[i].Info()
-		infoJ, _ := files[j].Info()
-		return infoI.Name() > infoJ.Name()
+		return files[i].Name > files[j].Name
 	})
 
 	return files
