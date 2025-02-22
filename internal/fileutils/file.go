@@ -24,24 +24,13 @@ func IsLink(info os.DirEntry) bool {
 	return f.Mode()&os.ModeSymlink != 0
 }
 
-func GetModifiedTime(entry os.DirEntry, colorize bool) string {
+func GetModifiedTime(entry os.DirEntry) string {
 	info, _ := entry.Info()
-	modifiedTime := info.ModTime()
-
-	if colorize {
-		return color.HiBlueString(humanize.Time(modifiedTime))
-	}
-
-	return humanize.Time(modifiedTime)
+	return humanize.Time(info.ModTime())
 }
 
-func GetFileSize(entry os.DirEntry, colorize bool) string {
+func GetFileSize(entry os.DirEntry) string {
 	info, _ := entry.Info()
-
-	if colorize {
-		return color.HiYellowString(humanize.Bytes(uint64(info.Size())))
-	}
-
 	return humanize.Bytes(uint64(info.Size()))
 }
 

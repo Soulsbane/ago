@@ -25,9 +25,9 @@ func getListOfFiles(showHidden bool) []fileutils.FileInfo {
 			info, _ := f.Info()
 
 			file.Name = f.Name()
-			file.HumanizeSize = fileutils.GetFileSize(f, true)
+			file.HumanizeSize = fileutils.GetFileSize(f)
 			file.RawSize = info.Size()
-			file.HumanizeModified = fileutils.GetModifiedTime(f, true)
+			file.HumanizeModified = fileutils.GetModifiedTime(f)
 			file.Modified = info.ModTime().Unix()
 
 			if fileutils.IsLink(f) {
