@@ -5,48 +5,8 @@ import (
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/jedib0t/go-pretty/v6/table"
-	hidden "github.com/tobychui/goHidden"
-	"log"
 	"os"
 )
-
-func getListOfFiles(showHidden bool) []fileutils.FileInfo {
-	var fileList []fileutils.FileInfo
-	files, err := os.ReadDir(".")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, f := range files {
-		if !f.IsDir() {
-			var file fileutils.FileInfo
-			isHidden, _ := hidden.IsHidden(f.Name(), false)
-			info, _ := f.Info()
-
-			file.Name = f.Name()
-			file.Executable = fileutils.IsFileExecutable(info)
-			file.HumanizeSize = fileutils.GetFileSize(f)
-			file.RawSize = info.Size()
-			file.HumanizeModified = fileutils.GetModifiedTime(f)
-			file.Modified = info.ModTime().Unix()
-
-			if fileutils.IsLink(f) {
-				file.LinkPath, _ = fileutils.GetLinkPath(f.Name())
-			}
-
-			if isHidden {
-				if showHidden {
-					fileList = append(fileList, file)
-				}
-			} else {
-				fileList = append(fileList, file)
-			}
-		}
-	}
-
-	return fileList
-}
 
 func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool) {
 	var totalFileSize int64
@@ -95,7 +55,7 @@ func main() {
 	var args ProgramArgs
 
 	parser := arg.MustParse(&args)
-	files := getListOfFiles(args.Hidden)
+	files := fileutils.GetListOfFiles(args.Hidden)
 
 	if args.SortBy == "name" {
 		files = sortByFileName(files)

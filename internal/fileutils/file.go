@@ -4,8 +4,48 @@ import (
 	"errors"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
+	hidden "github.com/tobychui/goHidden"
+	"log"
 	"os"
 )
+
+func GetListOfFiles(showHidden bool) []FileInfo {
+	var fileList []FileInfo
+	files, err := os.ReadDir(".")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, f := range files {
+		if !f.IsDir() {
+			var file FileInfo
+			isHidden, _ := hidden.IsHidden(f.Name(), false)
+			info, _ := f.Info()
+
+			file.Name = f.Name()
+			file.Executable = IsFileExecutable(info)
+			file.HumanizeSize = GetFileSize(f)
+			file.RawSize = info.Size()
+			file.HumanizeModified = GetModifiedTime(f)
+			file.Modified = info.ModTime().Unix()
+
+			if IsLink(f) {
+				file.LinkPath, _ = GetLinkPath(f.Name())
+			}
+
+			if isHidden {
+				if showHidden {
+					fileList = append(fileList, file)
+				}
+			} else {
+				fileList = append(fileList, file)
+			}
+		}
+	}
+
+	return fileList
+}
 
 func FileOrPathExists(fileName string) bool {
 	if _, err := os.Stat(fileName); errors.Is(err, os.ErrNotExist) {
