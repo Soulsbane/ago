@@ -3,7 +3,6 @@ package fileutils
 import (
 	"errors"
 	"github.com/dustin/go-humanize"
-	"github.com/fatih/color"
 	hidden "github.com/tobychui/goHidden"
 	"log"
 	"os"
@@ -72,30 +71,6 @@ func GetModifiedTime(entry os.DirEntry) string {
 func GetFileSize(entry os.DirEntry) string {
 	info, _ := entry.Info()
 	return humanize.Bytes(uint64(info.Size()))
-}
-
-func GetFileName(entry os.DirEntry, colorize bool, noLinks bool) string {
-	info, _ := entry.Info()
-	name := info.Name()
-	linkText := ""
-	path, _ := GetLinkPath(name)
-
-	if !noLinks && IsLink(entry) {
-		linkText = "-> " + path
-	}
-
-	if colorize {
-		// If the path doesn't exist due to a broken link then display it in red
-		if !FileOrPathExists(path) {
-			return color.HiRedString(name + " " + linkText)
-		}
-
-		if IsFileExecutable(info) {
-			return color.HiBlueString(name + " " + linkText)
-		}
-	}
-
-	return name + " " + linkText
 }
 
 // GetLinkPath returns the path of the link and a boolean indicating if the link destination path exists

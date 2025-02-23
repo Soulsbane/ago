@@ -4,9 +4,30 @@ import (
 	"github.com/Soulsbane/ago/internal/fileutils"
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
+	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"os"
 )
+
+func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
+	name := info.Name
+	linkText := ""
+	path, _ := fileutils.GetLinkPath(name)
+
+	if !noLinks && info.LinkPath != "" {
+		linkText = "-> " + path
+	}
+
+	if !fileutils.FileOrPathExists(path) {
+		return color.HiRedString(name + " " + linkText)
+	}
+
+	if info.Executable {
+		return color.HiBlueString(name + " " + linkText)
+	}
+
+	return name + " " + linkText
+}
 
 func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool) {
 	var totalFileSize int64
@@ -32,7 +53,7 @@ func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLink
 			dirDataTable.AppendRow(table.Row{
 				f.HumanizeModified,
 				f.HumanizeSize,
-				f.Name,
+				GetColorizedName(f, showLinks),
 			})
 
 			totalFileSize += f.RawSize
