@@ -51,8 +51,8 @@ func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLink
 
 		} else {
 			dirDataTable.AppendRow(table.Row{
-				f.HumanizeModified,
-				f.HumanizeSize,
+				color.HiBlueString(f.HumanizeModified),
+				color.HiYellowString(f.HumanizeSize),
 				GetColorizedName(f, showLinks),
 			})
 
