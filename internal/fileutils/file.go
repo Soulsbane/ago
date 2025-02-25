@@ -55,7 +55,8 @@ func FileOrPathExists(fileName string) bool {
 }
 
 func IsFileExecutable(info os.FileInfo) bool {
-	return info.Mode()&0111 != 0
+	fileMode := info.Mode()
+	return fileMode.IsRegular() && (fileMode.Perm()&0111) > 0
 }
 
 func IsLink(info os.DirEntry) bool {
