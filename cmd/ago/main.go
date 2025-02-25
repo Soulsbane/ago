@@ -7,6 +7,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"os"
+	"path/filepath"
 )
 
 func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
@@ -23,7 +24,11 @@ func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
 	}
 
 	if info.Executable {
-		return color.HiBlueString(name + " " + linkText)
+		program := filepath.Base(path)
+		dir := filepath.Dir(path)
+		green := color.New(color.Bold, color.FgGreen).SprintfFunc()
+
+		return color.HiBlueString(name) + "-> " + filepath.Join(color.HiBlueString(dir), green(program))
 	}
 
 	return name + " " + linkText
@@ -52,7 +57,7 @@ func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLink
 		} else {
 			dirDataTable.AppendRow(table.Row{
 				color.HiBlueString(f.HumanizeModified),
-				color.HiYellowString(f.HumanizeSize),
+				color.YellowString(f.HumanizeSize),
 				GetColorizedName(f, showLinks),
 			})
 
