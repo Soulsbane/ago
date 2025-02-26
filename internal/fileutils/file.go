@@ -30,6 +30,7 @@ func GetListOfFiles(showHidden bool) []FileInfo {
 			file.Modified = info.ModTime().Unix()
 
 			if IsLink(f) {
+				file.IsLink = true
 				file.LinkPath, _ = GetLinkPath(f.Name())
 			}
 
@@ -56,7 +57,7 @@ func FileOrPathExists(fileName string) bool {
 
 func IsFileExecutable(info os.FileInfo) bool {
 	fileMode := info.Mode()
-	return fileMode.IsRegular() && (fileMode.Perm()&0111) > 0
+	return fileMode.IsRegular() && fileMode.Perm()&0111 == 0111
 }
 
 func IsLink(info os.DirEntry) bool {

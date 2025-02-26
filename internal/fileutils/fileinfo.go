@@ -7,5 +7,6 @@ type FileInfo struct {
 	HumanizeSize     string
 	Modified         int64
 	HumanizeModified string
+	IsLink           bool
 	LinkPath         string
 }

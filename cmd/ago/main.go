@@ -11,27 +11,40 @@ import (
 )
 
 func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
+	var output string
 	name := info.Name
-	linkText := ""
-	path, _ := fileutils.GetLinkPath(name)
+	yellowColor := color.New(color.Bold, color.FgGreen).SprintfFunc()
+	blueColor := color.New(color.FgHiBlue).SprintfFunc()
 
-	if !noLinks && info.LinkPath != "" {
-		linkText = "-> " + path
+	if info.IsLink && !noLinks {
+		linkPath, _ := fileutils.GetLinkPath(name)
+		arrow := " -> "
+
+		if !fileutils.FileOrPathExists(linkPath) {
+			output = color.HiRedString(name + arrow + linkPath)
+		} else {
+			program := filepath.Base(linkPath)
+			dir := filepath.Dir(linkPath)
+
+			if info.Executable {
+				output = blueColor(name) + arrow + filepath.Join(blueColor(dir), yellowColor(program))
+			} else {
+				output = blueColor(name) + arrow + filepath.Join(blueColor(dir), yellowColor(program))
+			}
+		}
+	} else {
+		if info.Executable {
+			output = yellowColor(name)
+		} else {
+			output = blueColor(name)
+		}
+
+		if info.IsLink {
+			output = output + color.YellowString("(link)")
+		}
 	}
 
-	if !fileutils.FileOrPathExists(path) {
-		return color.HiRedString(name + " " + linkText)
-	}
-
-	if info.Executable {
-		program := filepath.Base(path)
-		dir := filepath.Dir(path)
-		green := color.New(color.Bold, color.FgGreen).SprintfFunc()
-
-		return color.HiBlueString(name) + "-> " + filepath.Join(color.HiBlueString(dir), green(program))
-	}
-
-	return name + " " + linkText
+	return output
 }
 
 func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool) {
