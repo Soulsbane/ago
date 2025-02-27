@@ -2,12 +2,14 @@ package fileutils
 
 import (
 	"errors"
-	"github.com/dustin/go-humanize"
-	hidden "github.com/tobychui/goHidden"
 	"log"
 	"os"
+
+	"github.com/dustin/go-humanize"
+	hidden "github.com/tobychui/goHidden"
 )
 
+// GetListOfFiles returns a list of files in the current directory
 func GetListOfFiles(showHidden bool) []FileInfo {
 	var fileList []FileInfo
 	files, err := os.ReadDir(".")
@@ -47,6 +49,7 @@ func GetListOfFiles(showHidden bool) []FileInfo {
 	return fileList
 }
 
+// FileOrPathExists returns true if the file or path exists and false otherwise
 func FileOrPathExists(fileName string) bool {
 	if _, err := os.Stat(fileName); errors.Is(err, os.ErrNotExist) {
 		return false
@@ -55,21 +58,25 @@ func FileOrPathExists(fileName string) bool {
 	return true
 }
 
+// IsFileExecutable returns true if the file is executable and false otherwise
 func IsFileExecutable(info os.FileInfo) bool {
 	fileMode := info.Mode()
 	return fileMode.IsRegular() && fileMode.Perm()&0111 == 0111
 }
 
+// IsLink returns true if the file is a symbolic link and false otherwise
 func IsLink(info os.DirEntry) bool {
 	f, _ := info.Info()
 	return f.Mode()&os.ModeSymlink != 0
 }
 
+// GetModifiedTime returns a human readable modified time
 func GetModifiedTime(entry os.DirEntry) string {
 	info, _ := entry.Info()
 	return humanize.Time(info.ModTime())
 }
 
+// GetFileSize returns a human readable file size
 func GetFileSize(entry os.DirEntry) string {
 	info, _ := entry.Info()
 	return humanize.Bytes(uint64(info.Size()))
