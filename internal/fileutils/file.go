@@ -60,8 +60,7 @@ func FileOrPathExists(fileName string) bool {
 
 // IsFileExecutable returns true if the file is executable and false otherwise
 func IsFileExecutable(info os.FileInfo) bool {
-	fileMode := info.Mode()
-	return fileMode.IsRegular() && fileMode.Perm()&0111 == 0111
+	return info.Mode()&0111 != 0
 }
 
 // IsLink returns true if the file is a symbolic link and false otherwise

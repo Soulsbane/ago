@@ -29,7 +29,7 @@ func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
 			if info.Executable {
 				output = blueColor(name) + arrow + filepath.Join(blueColor(dir), yellowColor(program))
 			} else {
-				output = blueColor(name) + arrow + filepath.Join(blueColor(dir), yellowColor(program))
+				output = blueColor(name) + arrow + blueColor(linkPath)
 			}
 		}
 	} else {
