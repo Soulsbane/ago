@@ -1,13 +1,14 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/Soulsbane/ago/internal/fileutils"
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"os"
-	"path/filepath"
 )
 
 func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
