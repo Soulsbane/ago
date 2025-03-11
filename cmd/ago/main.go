@@ -97,13 +97,14 @@ func main() {
 	parser := arg.MustParse(&args)
 	files := fileutils.GetListOfFiles(args.Hidden)
 
-	if args.SortBy == "name" {
+	switch args.SortBy {
+	case "name":
 		files = sortByFileName(files)
-	} else if args.SortBy == "size" {
+	case "size":
 		files = sortBySize(files)
-	} else if args.SortBy == "modified" {
+	case "modified":
 		files = sortByModTime(files)
-	} else {
+	default:
 		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
 
