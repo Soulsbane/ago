@@ -108,5 +108,9 @@ func main() {
 		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
 
-	outputResults(files, args.Ugly, args.NoTable, args.NoLinks)
+	if len(files) == 0 {
+		color.Red("No files found in the current directory.")
+	} else {
+		outputResults(files, args.Ugly, args.NoTable, args.NoLinks)
+	}
 }
