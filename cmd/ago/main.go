@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "fmt"
 	"os"
 	"path/filepath"
 
@@ -99,11 +100,11 @@ func main() {
 
 	switch args.SortBy {
 	case "name":
-		files = sortByFileName(files)
+		files = sortByFileName(files, args.SortOrder)
 	case "size":
-		files = sortBySize(files)
+		files = sortBySize(files, args.SortOrder)
 	case "modified":
-		files = sortByModTime(files)
+		files = sortByModTime(files, args.SortOrder)
 	default:
 		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}
