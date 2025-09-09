@@ -6,7 +6,7 @@ type ProgramArgs struct {
 	Hidden    bool   `arg:"-a, --all" default:"false" help:"Show hidden files also."`
 	NoLinks   bool   `arg:"-l, --no-links" default:"false" help:"Don't mark files as symbolic links."`
 	SortBy    string `arg:"-s, --sort-by" default:"modified" help:"Sorts the files by name, size, or modified."`
-	SortOrder string `arg:"-o, --sort-order" default:"descending" help:"Sorts the files in ascending or descending order."`
+	SortOrder string `arg:"-o, --sort-order" default:"desc" help:"Sorts the files in ascending(asc) or descending(desc) order."`
 }
 
 func (args ProgramArgs) Description() string {
