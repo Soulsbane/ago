@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/Soulsbane/ago/internal/fileutils"
+	"github.com/Soulsbane/ago/internal/sortfuncs"
 	"github.com/alexflint/go-arg"
 	"github.com/dustin/go-humanize"
 	"github.com/fatih/color"
@@ -100,11 +101,11 @@ func main() {
 
 	switch args.SortBy {
 	case "name":
-		files = sortByFileName(files, args.SortOrder)
+		files = sortfuncs.SortByFileName(files, args.SortOrder)
 	case "size":
-		files = sortBySize(files, args.SortOrder)
+		files = sortfuncs.SortBySize(files, args.SortOrder)
 	case "modified":
-		files = sortByModTime(files, args.SortOrder)
+		files = sortfuncs.SortByModTime(files, args.SortOrder)
 	default:
 		parser.Fail("Invalid sort option! Valid options are: 'name', 'size', or 'modified'.")
 	}

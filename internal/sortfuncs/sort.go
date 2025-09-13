@@ -1,4 +1,4 @@
-package main
+package sortfuncs
 
 import (
 	"cmp"
@@ -7,7 +7,7 @@ import (
 	"github.com/Soulsbane/ago/internal/fileutils"
 )
 
-func sortByModTime(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
+func SortByModTime(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
 	slices.SortFunc(files, func(a, b fileutils.FileInfo) int {
 		if sortOrder == "desc" {
 			return cmp.Compare(a.Modified, b.Modified)
@@ -19,7 +19,7 @@ func sortByModTime(files []fileutils.FileInfo, sortOrder string) []fileutils.Fil
 	return files
 }
 
-func sortBySize(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
+func SortBySize(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
 	slices.SortFunc(files, func(a, b fileutils.FileInfo) int {
 		if sortOrder == "desc" {
 			return -cmp.Compare(a.RawSize, b.RawSize)
@@ -31,7 +31,7 @@ func sortBySize(files []fileutils.FileInfo, sortOrder string) []fileutils.FileIn
 	return files
 }
 
-func sortByFileName(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
+func SortByFileName(files []fileutils.FileInfo, sortOrder string) []fileutils.FileInfo {
 	slices.SortFunc(files, func(a, b fileutils.FileInfo) int {
 		if sortOrder == "desc" {
 			return -cmp.Compare(a.Name, b.Name)
@@ -42,3 +42,11 @@ func sortByFileName(files []fileutils.FileInfo, sortOrder string) []fileutils.Fi
 
 	return files
 }
+
+// import (
+// 	"fmt"
+// )
+
+// func SortBySizeAgain() {
+// 	fmt.Print("Hello, World!")
+// }
