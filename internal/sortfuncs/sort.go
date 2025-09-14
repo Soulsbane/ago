@@ -42,11 +42,3 @@ func SortByFileName(files []fileutils.FileInfo, sortOrder string) []fileutils.Fi
 
 	return files
 }
-
-// import (
-// 	"fmt"
-// )
-
-// func SortBySizeAgain() {
-// 	fmt.Print("Hello, World!")
-// }
