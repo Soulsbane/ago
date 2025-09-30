@@ -1,1 +1,3 @@
 cmd/ago/ago
+# Added by goreleaser init:
+dist/
