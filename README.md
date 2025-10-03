@@ -1,6 +1,6 @@
 # Description
 
-List files of a directory in a human readable format with colorized output optionally included.
+List files of a directory in a colorized human readable format.
 
 ## Example Terminal Output
 
