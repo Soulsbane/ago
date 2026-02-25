@@ -2,8 +2,6 @@ module github.com/Soulsbane/ago
 
 go 1.26
 
-toolchain go1.24.1
-
 require (
 	github.com/alexflint/go-arg v1.6.1
 	github.com/dustin/go-humanize v1.0.1
