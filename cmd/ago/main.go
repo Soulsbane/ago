@@ -4,6 +4,7 @@ import (
 	// "fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/Soulsbane/ago/internal/fileutils"
 	"github.com/Soulsbane/ago/internal/sortfuncs"
@@ -50,9 +51,10 @@ func GetColorizedName(info fileutils.FileInfo, noLinks bool) string {
 	return output
 }
 
-func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool) {
+func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLinks bool, totalFiles int, totalHidden int) {
 	var totalFileSize int64
 	dirDataTable := table.NewWriter()
+	totalFilesData := "FILES: " + strconv.Itoa(totalFiles) + ", HIDDEN: " + strconv.Itoa(totalHidden)
 
 	dirDataTable.SetOutputMirror(os.Stdout)
 
@@ -88,7 +90,7 @@ func outputResults(files []fileutils.FileInfo, ugly bool, noTable bool, showLink
 	}
 
 	dirDataTable.AppendSeparator()
-	dirDataTable.AppendFooter(table.Row{"TOTAL", humanize.Bytes(uint64(totalFileSize))})
+	dirDataTable.AppendFooter(table.Row{"TOTAL", humanize.Bytes(uint64(totalFileSize)), totalFilesData})
 
 	dirDataTable.Render()
 }
@@ -97,7 +99,7 @@ func main() {
 	var args ProgramArgs
 
 	parser := arg.MustParse(&args)
-	files := fileutils.GetListOfFiles(args.Hidden)
+	files, totalFiles, totalHidden := fileutils.GetListOfFiles(args.Hidden)
 
 	switch args.SortBy {
 	case "name":
@@ -113,6 +115,6 @@ func main() {
 	if len(files) == 0 {
 		color.Red("No files found in the current directory.")
 	} else {
-		outputResults(files, args.Ugly, args.NoTable, args.NoLinks)
+		outputResults(files, args.Ugly, args.NoTable, args.NoLinks, totalFiles, totalHidden)
 	}
 }

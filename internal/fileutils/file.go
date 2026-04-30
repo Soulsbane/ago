@@ -10,9 +10,10 @@ import (
 )
 
 // GetListOfFiles returns a list of files in the current directory
-func GetListOfFiles(showHidden bool) []FileInfo {
+func GetListOfFiles(showHidden bool) ([]FileInfo, int, int) {
 	var fileList []FileInfo
 	files, err := os.ReadDir(".")
+	var totalFiles, totalHidden int
 
 	if err != nil {
 		log.Fatal(err)
@@ -39,14 +40,19 @@ func GetListOfFiles(showHidden bool) []FileInfo {
 			if isHidden {
 				if showHidden {
 					fileList = append(fileList, file)
+					totalFiles += 1
+				} else {
+					totalHidden += 1
 				}
 			} else {
 				fileList = append(fileList, file)
 			}
+
+			totalFiles += 1
 		}
 	}
 
-	return fileList
+	return fileList, totalFiles, totalHidden
 }
 
 // FileOrPathExists returns true if the file or path exists and false otherwise
