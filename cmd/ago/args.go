@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"strings"
+
+	"go.szostok.io/version"
+)
+
 type ProgramArgs struct {
 	Ugly      bool   `arg:"-u, --ugly" default:"false" help:"Remove colorized output. Yes it's ugly."`
 	NoTable   bool   `arg:"-t, --no-table" default:"false" help:"Don't display output as a table."`
@@ -11,4 +18,20 @@ type ProgramArgs struct {
 
 func (args ProgramArgs) Description() string {
 	return "List files of a directory in a human readable format with colorized output optionally included"
+}
+
+func (ProgramArgs) Version() string {
+	var builder strings.Builder
+	info := version.Get()
+
+	fmt.Fprintf(&builder, "Version: %s\n", info.Version)
+	fmt.Fprintf(&builder, "Git Commit: %s\n", info.GitCommit)
+	fmt.Fprintf(&builder, "Build Date: %s\n", info.BuildDate)
+	fmt.Fprintf(&builder, "Commit Date: %s\n", info.CommitDate)
+	fmt.Fprintf(&builder, "Dirty Build: %v\n", info.DirtyBuild)
+	fmt.Fprintf(&builder, "Go Version: %s\n", info.GoVersion)
+	fmt.Fprintf(&builder, "Compiler: %s\n", info.Compiler)
+	fmt.Fprintf(&builder, "Platform: %s", info.Platform)
+
+	return builder.String()
 }
