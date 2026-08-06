@@ -26,12 +26,6 @@ func (ProgramArgs) Version() string {
 
 	fmt.Fprintf(&builder, "Version: %s\n", info.Version)
 	fmt.Fprintf(&builder, "Git Commit: %s\n", info.GitCommit)
-	fmt.Fprintf(&builder, "Build Date: %s\n", info.BuildDate)
-	fmt.Fprintf(&builder, "Commit Date: %s\n", info.CommitDate)
-	fmt.Fprintf(&builder, "Dirty Build: %v\n", info.DirtyBuild)
-	fmt.Fprintf(&builder, "Go Version: %s\n", info.GoVersion)
-	fmt.Fprintf(&builder, "Compiler: %s\n", info.Compiler)
-	fmt.Fprintf(&builder, "Platform: %s", info.Platform)
 
 	return builder.String()
 }
