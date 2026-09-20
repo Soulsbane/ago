@@ -1,10 +1,10 @@
 module github.com/Soulsbane/ago
 
-go 1.26
+go 1.26.0
 
 require (
 	github.com/alexflint/go-arg v1.6.1
-	github.com/dustin/go-humanize v1.0.1
+	github.com/dustin/go-humanize v1.1.0
 	github.com/fatih/color v1.19.0
 	github.com/jedib0t/go-pretty/v6 v6.8.3
 	github.com/tobychui/goHidden v0.0.0-20210912041315-888f0999f674
@@ -17,8 +17,8 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.15 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
-	github.com/mattn/go-runewidth v0.0.28 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
+	github.com/mattn/go-runewidth v0.0.30 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
